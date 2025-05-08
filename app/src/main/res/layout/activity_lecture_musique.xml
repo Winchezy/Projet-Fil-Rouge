@@ -60,6 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TITLE"
+        android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@+id/music_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -72,6 +73,7 @@
         android:layout_marginLeft="25dp"
         android:layout_marginTop="10dp"
         android:text="ALBUM"
+        android:textColor="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
@@ -80,6 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="AUTHOR"
+        android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@+id/album"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="10dp"
@@ -92,6 +95,7 @@
         android:layout_marginLeft="25dp"
         android:layout_marginTop="10dp"
         android:text="DATE"
+        android:textColor="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/author" />
 
@@ -102,6 +106,8 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="10dp"
         android:src="@drawable/random"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
         app:layout_constraintTop_toBottomOf="@+id/skip_previous_logo"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -109,6 +115,8 @@
         android:id="@+id/replay_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
         app:layout_constraintStart_toEndOf="@id/random_logo"
         app:layout_constraintTop_toTopOf="@id/random_logo"
         android:src="@drawable/replay" />
@@ -117,6 +125,8 @@
         android:id="@+id/lyrics_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/random_logo"
         android:layout_marginEnd="10dp"

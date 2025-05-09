@@ -7,8 +7,11 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.widget.Button;
 import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.imageview.ShapeableImageView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +31,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Affiche l’image floutée en fond
         background.setImageBitmap(blurred);
+
+        ImageView randomButton = findViewById(R.id.random_logo);
+        randomButton.setOnClickListener(v -> changerCouleurBoutonRandom());
+
+        ImageView replayButton = findViewById(R.id.replay_logo);
+        replayButton.setOnClickListener(v -> changerCouleurBoutonReplay());
     }
 
     // Fonction utilitaire de flou (RenderScript)
@@ -48,4 +57,32 @@ public class MainActivity extends AppCompatActivity {
 
         return output;
     }
+
+    private boolean etatLogoRandom = false; // pour suivre l'état
+    private boolean etatLogoReplay = false; // pour suivre l'état
+
+    public void changerCouleurBoutonRandom() {
+        ImageView randomButton = findViewById(R.id.random_logo);
+
+        if (etatLogoRandom) {
+            randomButton.setImageResource(R.drawable.random); // image originale
+        } else {
+            randomButton.setImageResource(R.drawable.random_green); // autre image
+        }
+
+        etatLogoRandom = !etatLogoRandom; // on inverse l’état
+    }
+
+    public void changerCouleurBoutonReplay() {
+        ImageView replayButton = findViewById(R.id.replay_logo);
+
+        if (etatLogoReplay) {
+            replayButton.setImageResource(R.drawable.replay); // image originale
+        } else {
+            replayButton.setImageResource(R.drawable.replay_green); // autre image
+        }
+
+        etatLogoReplay = !etatLogoReplay; // on inverse l’état
+    }
+
 }

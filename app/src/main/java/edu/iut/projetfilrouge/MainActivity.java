@@ -7,82 +7,104 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
-import android.widget.Button;
+import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.imageview.ShapeableImageView;
+import com.bumptech.glide.Glide;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private boolean etatLogoRandom = false;
+    private boolean etatLogoReplay = false;
+
+    private List<Musique> musiqueList = new ArrayList<>();
+    private int currentIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lecture_musique);
 
-        // Référence à l'image de fond
         ImageView background = findViewById(R.id.backgroundImage);
-
-        // Charge l'image depuis drawable
         Bitmap original = ((BitmapDrawable) getResources().getDrawable(R.drawable.test)).getBitmap();
-
-        // Applique le flou à l’image
         Bitmap blurred = blurBitmap(original, 20f);
-
-        // Affiche l’image floutée en fond
         background.setImageBitmap(blurred);
 
-        ImageView randomButton = findViewById(R.id.random_logo);
-        randomButton.setOnClickListener(v -> changerCouleurBoutonRandom());
+        findViewById(R.id.random_logo).setOnClickListener(v -> changerCouleurBoutonRandom());
+        findViewById(R.id.replay_logo).setOnClickListener(v -> changerCouleurBoutonReplay());
 
-        ImageView replayButton = findViewById(R.id.replay_logo);
-        replayButton.setOnClickListener(v -> changerCouleurBoutonReplay());
+        findViewById(R.id.skip_previous_logo).setOnClickListener(v -> {
+            if (currentIndex > 0) {
+                currentIndex--;
+                afficherMusique(musiqueList.get(currentIndex));
+            }
+        });
+
+        findViewById(R.id.skip_next_logo).setOnClickListener(v -> {
+            if (currentIndex < musiqueList.size() - 1) {
+                currentIndex++;
+                afficherMusique(musiqueList.get(currentIndex));
+            }
+        });
+
+        new Thread(() -> {
+            File fichier = CsvDownloader.download(this, "http://edu.info06.net/lyrics/lyrics.csv");
+            if (fichier != null) {
+                musiqueList = CsvParser.parseAll(fichier);
+                if (!musiqueList.isEmpty()) {
+                    currentIndex = 0;
+                    runOnUiThread(() -> afficherMusique(musiqueList.get(currentIndex)));
+                } else {
+                    Log.d("DEBUG_CSV", "Liste vide");
+                }
+            } else {
+                Log.d("DEBUG_CSV", "Téléchargement échoué");
+            }
+        }).start();
     }
 
-    // Fonction utilitaire de flou (RenderScript)
+    private void afficherMusique(Musique musique) {
+        ((TextView) findViewById(R.id.title)).setText(musique.getTitre());
+        ((TextView) findViewById(R.id.album)).setText(musique.getAlbum());
+        ((TextView) findViewById(R.id.author)).setText(musique.getArtist());
+        ((TextView) findViewById(R.id.date)).setText(musique.getDate());
+
+        String imageUrl = "http://edu.info06.net/lyrics/images/" + musique.getCover();
+        Glide.with(this)
+                .load(imageUrl)
+                .into((ImageView) findViewById(R.id.music_image));
+    }
+
     public Bitmap blurBitmap(Bitmap input, float radius) {
         Bitmap output = Bitmap.createBitmap(input.getWidth(), input.getHeight(), Bitmap.Config.ARGB_8888);
-
         RenderScript rs = RenderScript.create(this);
         Allocation inputAlloc = Allocation.createFromBitmap(rs, input);
         Allocation outputAlloc = Allocation.createFromBitmap(rs, output);
-
         ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
-        script.setRadius(Math.min(25f, Math.max(0.1f, radius))); // entre 0.1 et 25
+        script.setRadius(Math.min(25f, Math.max(0.1f, radius)));
         script.setInput(inputAlloc);
         script.forEach(outputAlloc);
-
         outputAlloc.copyTo(output);
         rs.destroy();
-
         return output;
     }
 
-    private boolean etatLogoRandom = false; // pour suivre l'état
-    private boolean etatLogoReplay = false; // pour suivre l'état
-
     public void changerCouleurBoutonRandom() {
         ImageView randomButton = findViewById(R.id.random_logo);
-
-        if (etatLogoRandom) {
-            randomButton.setImageResource(R.drawable.random); // image originale
-        } else {
-            randomButton.setImageResource(R.drawable.random_green); // autre image
-        }
-
-        etatLogoRandom = !etatLogoRandom; // on inverse l’état
+        randomButton.setImageResource(etatLogoRandom ? R.drawable.random : R.drawable.random_green);
+        etatLogoRandom = !etatLogoRandom;
     }
 
     public void changerCouleurBoutonReplay() {
         ImageView replayButton = findViewById(R.id.replay_logo);
-
-        if (etatLogoReplay) {
-            replayButton.setImageResource(R.drawable.replay); // image originale
-        } else {
-            replayButton.setImageResource(R.drawable.replay_green); // autre image
-        }
-
-        etatLogoReplay = !etatLogoReplay; // on inverse l’état
+        replayButton.setImageResource(etatLogoReplay ? R.drawable.replay : R.drawable.replay_green);
+        etatLogoReplay = !etatLogoReplay;
     }
-
 }

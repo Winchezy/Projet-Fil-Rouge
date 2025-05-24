@@ -19,6 +19,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.view.View;
+
 public class MainActivity extends AppCompatActivity {
 
     private boolean etatLogoRandom = false;
@@ -31,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lecture_musique);
+
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        );
 
         /*ImageView background = findViewById(R.id.backgroundImage);
         Bitmap original = ((BitmapDrawable) getResources().getDrawable(R.drawable.test)).getBitmap();

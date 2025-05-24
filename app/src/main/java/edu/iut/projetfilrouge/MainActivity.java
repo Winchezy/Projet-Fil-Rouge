@@ -9,6 +9,7 @@ import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Musique> musiqueList = new ArrayList<>();
     private int currentIndex = 0;
+    private boolean showingLyrics = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
                 afficherMusique(musiqueList.get(currentIndex));
             }
         });
+
+        findViewById(R.id.lyrics_logo).setOnClickListener(v -> toggleLyrics());
+
 
         new Thread(() -> {
             File fichier = CsvDownloader.download(this, "http://edu.info06.net/lyrics/lyrics.csv");
@@ -138,4 +143,35 @@ public class MainActivity extends AppCompatActivity {
         replayButton.setImageResource(etatLogoReplay ? R.drawable.replay : R.drawable.replay_green);
         etatLogoReplay = !etatLogoReplay;
     }
+
+    private void toggleLyrics() {
+        ImageView musicImage = findViewById(R.id.music_image);
+        TextView lyricsText = findViewById(R.id.lyrics_text);
+        ScrollView lyricsScroll = findViewById(R.id.lyrics_scroll);
+
+        if (showingLyrics) {
+            lyricsScroll.setVisibility(View.GONE);
+            musicImage.setVisibility(View.VISIBLE);
+        } else {
+            if (!musiqueList.isEmpty()) {
+                String rawLyrics = musiqueList.get(currentIndex).getLyrics();
+                String[] lines = rawLyrics.split(";");
+                StringBuilder formatted = new StringBuilder();
+                for (String line : lines) {
+                    line = line.trim();
+                    if (!line.isEmpty()) {
+                        formatted.append(Character.toUpperCase(line.charAt(0)))
+                                .append(line.substring(1))
+                                .append("\n");
+                    }
+                }
+                lyricsText.setText(formatted.toString().trim());
+            }
+            lyricsScroll.setVisibility(View.VISIBLE);
+            musicImage.setVisibility(View.GONE);
+        }
+
+        showingLyrics = !showingLyrics;
+    }
+
 }

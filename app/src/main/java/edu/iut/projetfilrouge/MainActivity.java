@@ -111,10 +111,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void afficherMusique(Musique musique) {
+        ImageView pauseButton = findViewById(R.id.pause_circle_logo);
+
         ((TextView) findViewById(R.id.title)).setText(musique.getTitre());
         ((TextView) findViewById(R.id.album)).setText(musique.getAlbum());
         ((TextView) findViewById(R.id.author)).setText(musique.getArtist());
         ((TextView) findViewById(R.id.date)).setText(musique.getDate());
+
+        pauseButton.setImageResource(R.drawable.pause_circle);
+        isPlaying = true;
 
         String imageUrl = "http://edu.info06.net/lyrics/images/" + musique.getCover();
         Glide.with(this)

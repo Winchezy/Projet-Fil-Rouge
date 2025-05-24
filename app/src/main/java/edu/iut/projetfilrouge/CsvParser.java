@@ -24,14 +24,15 @@ public class CsvParser {
                 }
 
                 String[] parts = line.split("#");
-                if (parts.length >= 6) {
+                if (parts.length >= 7) {
                     musiqueList.add(new Musique(
                             parts[0], // title
                             parts[1], // album
                             parts[2], // artist
                             parts[3], // date
                             parts[4], // cover
-                            parts[5]  // lyrics
+                            parts[5], // lyrics
+                            parts[6]  // mp3
                     ));
                 }
             }

@@ -132,6 +132,13 @@ public class MainActivity extends AppCompatActivity {
                     public void onLoadCleared(android.graphics.drawable.Drawable placeholder) {}
                 });
 
+        // Forcer retour à l’image si on était sur les lyrics
+        if (showingLyrics) {
+            findViewById(R.id.lyrics_scroll).setVisibility(View.GONE);
+            findViewById(R.id.music_image).setVisibility(View.VISIBLE);
+            showingLyrics = false;
+        }
+
         // Lire musique via PlayerService
         String mp3Url = "http://edu.info06.net/lyrics/mp3/" + musique.getMp3();
         PlayerService.play(this, mp3Url);

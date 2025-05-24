@@ -32,10 +32,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lecture_musique);
 
-        ImageView background = findViewById(R.id.backgroundImage);
+        /*ImageView background = findViewById(R.id.backgroundImage);
         Bitmap original = ((BitmapDrawable) getResources().getDrawable(R.drawable.test)).getBitmap();
         Bitmap blurred = blurBitmap(original, 20f);
-        background.setImageBitmap(blurred);
+        background.setImageBitmap(blurred);*/
 
         findViewById(R.id.random_logo).setOnClickListener(v -> changerCouleurBoutonRandom());
         findViewById(R.id.replay_logo).setOnClickListener(v -> changerCouleurBoutonReplay());
@@ -76,10 +76,33 @@ public class MainActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.author)).setText(musique.getArtist());
         ((TextView) findViewById(R.id.date)).setText(musique.getDate());
 
-        String imageUrl = "http://edu.info06.net/lyrics/images/" + musique.getCover();
+        /*String imageUrl = "http://edu.info06.net/lyrics/images/" + musique.getCover();
         Glide.with(this)
                 .load(imageUrl)
-                .into((ImageView) findViewById(R.id.music_image));
+                .into((ImageView) findViewById(R.id.music_image));*/
+
+        String imageUrl = "http://edu.info06.net/lyrics/images/" + musique.getCover();
+
+        Glide.with(this)
+                .asBitmap()
+                .load(imageUrl)
+                .into(new com.bumptech.glide.request.target.CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, com.bumptech.glide.request.transition.Transition<? super Bitmap> transition) {
+                        // Image nette au centre
+                        ((ImageView) findViewById(R.id.music_image)).setImageBitmap(resource);
+
+                        // Image floutée en fond
+                        Bitmap flou = blurBitmap(resource, 20f);
+                        ((ImageView) findViewById(R.id.backgroundImage)).setImageBitmap(flou);
+                    }
+
+                    @Override
+                    public void onLoadCleared(android.graphics.drawable.Drawable placeholder) {
+                        // Facultatif
+                    }
+                });
+
     }
 
     public Bitmap blurBitmap(Bitmap input, float radius) {

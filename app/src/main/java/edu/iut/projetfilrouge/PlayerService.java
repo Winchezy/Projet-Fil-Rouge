@@ -8,12 +8,18 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 
 import androidx.media3.common.MediaItem;
+import androidx.media3.common.Player;
 import androidx.media3.exoplayer.ExoPlayer;
 
 public class PlayerService extends Service {
 
     private static ExoPlayer player;
     private static String currentUrl = null;
+    public static boolean replayEnabled = false;
+    private static MainActivity mainActivityInstance;
+    private static boolean listenerAjoute = false;
+
+
 
     public static void play(Context context, String url) {
         if (player == null) {
@@ -25,6 +31,22 @@ public class PlayerService extends Service {
             MediaItem mediaItem = MediaItem.fromUri(url);
             player.setMediaItem(mediaItem);
             player.prepare();
+
+            if (!listenerAjoute) {
+                player.addListener(new Player.Listener() {
+                    @Override
+                    public void onPlaybackStateChanged(int playbackState) {
+                        if (playbackState == Player.STATE_ENDED) {
+                            if (!replayEnabled && mainActivityInstance != null) {
+                                mainActivityInstance.runOnUiThread(() -> mainActivityInstance.playNextMusic());
+                            }
+                        }
+                    }
+                });
+                listenerAjoute = true;
+            }
+
+
         }
 
         player.play();
@@ -42,6 +64,10 @@ public class PlayerService extends Service {
 
     public static ExoPlayer getPlayerInstance() {
         return player;
+    }
+
+    public static void setMainActivityInstance(MainActivity instance) {
+        mainActivityInstance = instance;
     }
 
     @Nullable

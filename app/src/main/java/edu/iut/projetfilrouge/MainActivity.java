@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        PlayerService.setMainActivityInstance(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lecture_musique);
 
@@ -286,6 +288,14 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("URL", url);
         startService(intent);
     }
+
+    public void playNextMusic() {
+        if (currentIndex < musiqueList.size() - 1) {
+            currentIndex++;
+            afficherMusique(musiqueList.get(currentIndex));
+        }
+    }
+
 
 
 }

@@ -26,6 +26,8 @@ import java.util.List;
 import android.view.View;
 import android.os.Handler;
 
+import androidx.media3.common.Player;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     private Handler seekBarHandler = new Handler();
     private Runnable seekBarRunnable;
     private boolean isPlaying = true;
+
+    private boolean boucleActivee = false;
+
 
 
 
@@ -61,11 +66,23 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.replay_logo).setOnClickListener(v -> changerCouleurBoutonReplay());
 
         findViewById(R.id.skip_previous_logo).setOnClickListener(v -> {
-            if (currentIndex > 0) {
-                currentIndex--;
-                afficherMusique(musiqueList.get(currentIndex));
+            ExoPlayer player = PlayerService.getPlayerInstance();
+            if (player != null) {
+                long position = player.getCurrentPosition();
+
+                if (position > 3000) {
+                    player.seekTo(0);
+                } else {
+                    if (currentIndex > 0) {
+                        currentIndex--;
+                        afficherMusique(musiqueList.get(currentIndex));
+                    } else {
+                        player.seekTo(0);
+                    }
+                }
             }
         });
+
 
         findViewById(R.id.skip_next_logo).setOnClickListener(v -> {
             if (currentIndex < musiqueList.size() - 1) {
@@ -215,9 +232,23 @@ public class MainActivity extends AppCompatActivity {
 
     public void changerCouleurBoutonReplay() {
         ImageView replayButton = findViewById(R.id.replay_logo);
-        replayButton.setImageResource(etatLogoReplay ? R.drawable.replay : R.drawable.replay_green);
+
+        if (etatLogoReplay) {
+            replayButton.setImageResource(R.drawable.replay); // image originale
+            boucleActivee = false;
+        } else {
+            replayButton.setImageResource(R.drawable.replay_green); // autre image
+            boucleActivee = true;
+        }
+
         etatLogoReplay = !etatLogoReplay;
+
+        ExoPlayer player = PlayerService.getPlayerInstance();
+        if (player != null) {
+            player.setRepeatMode(boucleActivee ? Player.REPEAT_MODE_ONE : Player.REPEAT_MODE_OFF);
+        }
     }
+
 
     private void toggleLyrics() {
         ImageView musicImage = findViewById(R.id.music_image);

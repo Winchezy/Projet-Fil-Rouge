@@ -18,6 +18,8 @@ public class PlayerService extends Service {
     public static boolean replayEnabled = false;
     private static MainActivity mainActivityInstance;
     private static boolean listenerAjoute = false;
+    public static boolean randomEnabled = false;
+
 
 
 
@@ -37,9 +39,19 @@ public class PlayerService extends Service {
                     @Override
                     public void onPlaybackStateChanged(int playbackState) {
                         if (playbackState == Player.STATE_ENDED) {
-                            if (!replayEnabled && mainActivityInstance != null) {
-                                mainActivityInstance.runOnUiThread(() -> mainActivityInstance.playNextMusic());
+                            if (mainActivityInstance != null) {
+                                mainActivityInstance.runOnUiThread(() -> {
+                                    if (replayEnabled) {
+                                        player.seekTo(0);
+                                        player.play();
+                                    } else if (randomEnabled) {
+                                        mainActivityInstance.playRandomMusic();
+                                    } else {
+                                        mainActivityInstance.playNextMusic();
+                                    }
+                                });
                             }
+
                         }
                     }
                 });

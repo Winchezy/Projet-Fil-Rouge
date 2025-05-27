@@ -28,6 +28,9 @@ import android.os.Handler;
 
 import androidx.media3.common.Player;
 
+import java.util.Random;
+import java.util.Stack;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,8 +43,9 @@ public class MainActivity extends AppCompatActivity {
     private Handler seekBarHandler = new Handler();
     private Runnable seekBarRunnable;
     private boolean isPlaying = true;
-
     private boolean boucleActivee = false;
+    private Stack<Integer> historique = new Stack<>();
+
 
 
 
@@ -75,23 +79,37 @@ public class MainActivity extends AppCompatActivity {
                 if (position > 3000) {
                     player.seekTo(0);
                 } else {
-                    if (currentIndex > 0) {
-                        currentIndex--;
-                        afficherMusique(musiqueList.get(currentIndex));
+                    if (PlayerService.randomEnabled) {
+                        if (!historique.isEmpty()) {
+                            currentIndex = historique.pop();
+                            afficherMusique(musiqueList.get(currentIndex));
+                        } else {
+                            player.seekTo(0);
+                        }
                     } else {
-                        player.seekTo(0);
+                        if (currentIndex > 0) {
+                            currentIndex--;
+                            afficherMusique(musiqueList.get(currentIndex));
+                        } else {
+                            player.seekTo(0);
+                        }
                     }
                 }
             }
         });
 
 
+
         findViewById(R.id.skip_next_logo).setOnClickListener(v -> {
-            if (currentIndex < musiqueList.size() - 1) {
+            if (PlayerService.randomEnabled) {
+                playRandomMusic();
+            } else if (currentIndex < musiqueList.size() - 1) {
+                historique.push(currentIndex);
                 currentIndex++;
                 afficherMusique(musiqueList.get(currentIndex));
             }
         });
+
 
         findViewById(R.id.lyrics_logo).setOnClickListener(v -> toggleLyrics());
 
@@ -105,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                     pauseButton.setImageResource(R.drawable.play_circle);
                     isPlaying = false;
                 } else {
-                    player.play(); // on ne relance pas PlayerService.play(...) pour ne pas réinitialiser
+                    player.play();
                     pauseButton.setImageResource(R.drawable.pause_circle);
                     isPlaying = true;
                 }
@@ -200,12 +218,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                // Optionnel : tu peux mettre en pause ici si tu veux
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                // Optionnel : tu peux relancer la musique ici si besoin
             }
         });
 
@@ -230,16 +246,17 @@ public class MainActivity extends AppCompatActivity {
         ImageView randomButton = findViewById(R.id.random_logo);
         randomButton.setImageResource(etatLogoRandom ? R.drawable.random : R.drawable.random_green);
         etatLogoRandom = !etatLogoRandom;
+        PlayerService.randomEnabled = etatLogoRandom;
     }
 
     public void changerCouleurBoutonReplay() {
         ImageView replayButton = findViewById(R.id.replay_logo);
 
         if (etatLogoReplay) {
-            replayButton.setImageResource(R.drawable.replay); // image originale
+            replayButton.setImageResource(R.drawable.replay);
             boucleActivee = false;
         } else {
-            replayButton.setImageResource(R.drawable.replay_green); // autre image
+            replayButton.setImageResource(R.drawable.replay_green);
             boucleActivee = true;
         }
 
@@ -296,6 +313,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void playRandomMusic() {
+        if (musiqueList.size() <= 1) return;
+
+        int previousIndex = currentIndex;
+        int newIndex;
+
+        do {
+            newIndex = new Random().nextInt(musiqueList.size());
+        } while (newIndex == previousIndex);
+
+        historique.push(currentIndex);
+        currentIndex = newIndex;
+        afficherMusique(musiqueList.get(currentIndex));
+    }
 
 
 }

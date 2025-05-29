@@ -49,12 +49,12 @@ public class MusiqueAdapter extends BaseAdapter {
         RatingBar ratingBar = layout.findViewById(R.id.ratingBar);
 
         titre.setText(musique.getTitre());
-        artiste.setText(musique.getArtiste());
-        image.setImageResource(musique.getImageResId());
-        ratingBar.setRating(musique.getRating());
+        artiste.setText(musique.getArtist());
+//        image.setImageResource(musique.getImageResId());
+//        ratingBar.setRating(musique.getRating());
 
         ratingBar.setOnRatingBarChangeListener((bar, rating, fromUser) -> {
-            musique.setRating(rating);
+//            musique.setRating(rating);
             activity.onRatingChanged(position, rating);
         });
 

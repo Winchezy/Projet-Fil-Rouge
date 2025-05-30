@@ -31,24 +31,20 @@ import androidx.media3.common.Player;
 import java.util.Random;
 import java.util.Stack;
 
-
 public class MainActivity extends AppCompatActivity {
 
     private boolean etatLogoRandom = false;
     private boolean etatLogoReplay = false;
 
-    private List<Musique> musiqueList = new ArrayList<>();
-    private int currentIndex = 0;
+    private static List<Musique> musiqueList = new ArrayList<>();
+    private static int currentIndex = 0;
+
     private boolean showingLyrics = false;
     private Handler seekBarHandler = new Handler();
     private Runnable seekBarRunnable;
     private boolean isPlaying = true;
     private boolean boucleActivee = false;
     private Stack<Integer> historique = new Stack<>();
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,8 +94,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
         findViewById(R.id.skip_next_logo).setOnClickListener(v -> {
             if (PlayerService.randomEnabled) {
                 playRandomMusic();
@@ -109,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
                 afficherMusique(musiqueList.get(currentIndex));
             }
         });
-
 
         findViewById(R.id.lyrics_logo).setOnClickListener(v -> toggleLyrics());
 
@@ -130,21 +123,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        new Thread(() -> {
-            File fichier = CsvDownloader.download(this, "http://edu.info06.net/lyrics/lyrics.csv");
-            if (fichier != null) {
-                musiqueList = CsvParser.parseAll(fichier);
-                if (!musiqueList.isEmpty()) {
-                    currentIndex = 0;
-                    runOnUiThread(() -> afficherMusique(musiqueList.get(currentIndex)));
+        // Nouvelle condition pour éviter de recharger inutilement
+        if (musiqueList == null || musiqueList.isEmpty()) {
+            new Thread(() -> {
+                File fichier = CsvDownloader.download(this, "http://edu.info06.net/lyrics/lyrics.csv");
+                if (fichier != null) {
+                    musiqueList = CsvParser.parseAll(fichier);
+                    if (!musiqueList.isEmpty()) {
+                        currentIndex = 0;
+                        runOnUiThread(() -> afficherMusique(musiqueList.get(currentIndex)));
+                    } else {
+                        Log.d("DEBUG_CSV", "Liste vide");
+                    }
                 } else {
-                    Log.d("DEBUG_CSV", "Liste vide");
+                    Log.d("DEBUG_CSV", "Téléchargement échoué");
                 }
-            } else {
-                Log.d("DEBUG_CSV", "Téléchargement échoué");
-            }
-        }).start();
+            }).start();
+        } else {
+            afficherMusique(musiqueList.get(currentIndex));
+        }
     }
 
     private void afficherMusique(Musique musique) {
@@ -217,16 +214,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
-
     }
-
 
     public Bitmap blurBitmap(Bitmap input, float radius) {
         Bitmap output = Bitmap.createBitmap(input.getWidth(), input.getHeight(), Bitmap.Config.ARGB_8888);
@@ -267,7 +260,6 @@ public class MainActivity extends AppCompatActivity {
             player.setRepeatMode(boucleActivee ? Player.REPEAT_MODE_ONE : Player.REPEAT_MODE_OFF);
         }
     }
-
 
     private void toggleLyrics() {
         ImageView musicImage = findViewById(R.id.music_image);
@@ -327,6 +319,4 @@ public class MainActivity extends AppCompatActivity {
         currentIndex = newIndex;
         afficherMusique(musiqueList.get(currentIndex));
     }
-
-
 }

@@ -8,6 +8,7 @@ public class Musique {
     private String cover;
     private String lyrics;
     private String mp3;
+    private String coverUrl;
 
     public Musique(String titre, String album, String artist, String date, String cover, String lyrics, String mp3) {
         this.titre = titre;
@@ -42,4 +43,8 @@ public class Musique {
     public String getLyrics() { return lyrics; }
 
     public String getMp3() { return mp3; }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
 }

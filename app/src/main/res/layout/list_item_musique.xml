@@ -20,8 +20,9 @@
         android:layout_height="wrap_content"
         android:text="artiste"
         app:layout_constraintBottom_toBottomOf="@+id/img_musique"
-        app:layout_constraintTop_toTopOf="@+id/img_musique"
-        tools:layout_editor_absoluteX="65dp" />
+        app:layout_constraintEnd_toStartOf="@+id/ratingBar"
+        app:layout_constraintStart_toEndOf="@+id/img_musique"
+        app:layout_constraintTop_toTopOf="@+id/img_musique" />
 
     <TextView
         android:id="@+id/tv_titre"

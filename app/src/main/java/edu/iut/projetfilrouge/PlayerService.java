@@ -16,7 +16,7 @@ public class PlayerService extends Service {
     private static ExoPlayer player;
     private static String currentUrl = null;
     public static boolean replayEnabled = false;
-    private static MainActivity mainActivityInstance;
+    private static MusicReaderActivity musicReaderActivityInstance;
     private static boolean listenerAjoute = false;
     public static boolean randomEnabled = false;
 
@@ -39,15 +39,15 @@ public class PlayerService extends Service {
                     @Override
                     public void onPlaybackStateChanged(int playbackState) {
                         if (playbackState == Player.STATE_ENDED) {
-                            if (mainActivityInstance != null) {
-                                mainActivityInstance.runOnUiThread(() -> {
+                            if (musicReaderActivityInstance != null) {
+                                musicReaderActivityInstance.runOnUiThread(() -> {
                                     if (replayEnabled) {
                                         player.seekTo(0);
                                         player.play();
                                     } else if (randomEnabled) {
-                                        mainActivityInstance.playRandomMusic();
+                                        musicReaderActivityInstance.playRandomMusic();
                                     } else {
-                                        mainActivityInstance.playNextMusic();
+                                        musicReaderActivityInstance.playNextMusic();
                                     }
                                 });
                             }
@@ -78,8 +78,8 @@ public class PlayerService extends Service {
         return player;
     }
 
-    public static void setMainActivityInstance(MainActivity instance) {
-        mainActivityInstance = instance;
+    public static void setMainActivityInstance(MusicReaderActivity instance) {
+        musicReaderActivityInstance = instance;
     }
 
     @Nullable

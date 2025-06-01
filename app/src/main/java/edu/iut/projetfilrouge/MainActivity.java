@@ -123,25 +123,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Nouvelle condition pour éviter de recharger inutilement
-        if (musiqueList == null || musiqueList.isEmpty()) {
-            new Thread(() -> {
-                File fichier = CsvDownloader.download(this, "http://edu.info06.net/lyrics/lyrics.csv");
-                if (fichier != null) {
-                    musiqueList = CsvParser.parseAll(fichier);
-                    if (!musiqueList.isEmpty()) {
-                        currentIndex = 0;
-                        runOnUiThread(() -> afficherMusique(musiqueList.get(currentIndex)));
-                    } else {
-                        Log.d("DEBUG_CSV", "Liste vide");
+        new Thread(() -> {
+            File fichier = CsvDownloader.download(this, "http://edu.info06.net/lyrics/lyrics.csv");
+            if (fichier != null) {
+                musiqueList = CsvParser.parseAll(fichier);
+
+                // Chercher s'il y a un titre reçu depuis l'intent
+                String titreRecherche = getIntent().getStringExtra("musique_titre");
+
+                if (titreRecherche != null && !titreRecherche.isEmpty()) {
+                    for (int i = 0; i < musiqueList.size(); i++) {
+                        if (musiqueList.get(i).getTitre().equalsIgnoreCase(titreRecherche)) {
+                            currentIndex = i;
+                            break;
+                        }
                     }
-                } else {
-                    Log.d("DEBUG_CSV", "Téléchargement échoué");
                 }
-            }).start();
-        } else {
-            afficherMusique(musiqueList.get(currentIndex));
-        }
+
+                runOnUiThread(() -> {
+                    if (!musiqueList.isEmpty()) {
+                        afficherMusique(musiqueList.get(currentIndex));
+                    }
+                });
+            } else {
+                Log.d("DEBUG_CSV", "Téléchargement échoué");
+            }
+        }).start();
+
     }
 
     private void afficherMusique(Musique musique) {

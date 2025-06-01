@@ -8,41 +8,46 @@
     <LinearLayout
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="60dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="8dp">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btn_home"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:contentDescription="Accueil" />
+            android:contentDescription="@string/accueil"
+            android:src="@drawable/home"
+            />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btn_music"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:contentDescription="Lecteur" />
+            android:contentDescription="@string/lecteur"
+            android:src="@drawable/music"
+            />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btn_other"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:contentDescription="Autre" />
+            android:contentDescription="@string/autre"
+            android:src="@drawable/star"
+            />
     </LinearLayout>
 
     <EditText
         android:id="@+id/search_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Rechercher une musique..."
+        android:hint="@string/search"
         android:inputType="text"
         android:drawableStart="@android:drawable/ic_menu_search"
-        android:padding="12dp"
         android:layout_margin="8dp" />
 
     <ListView

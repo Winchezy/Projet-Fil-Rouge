@@ -52,6 +52,16 @@ public class ClickableActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     MusiqueAdapter adapter = new MusiqueAdapter(this, musiqueList);
                     listView.setAdapter(adapter);
+
+                    // Clic sur une ligne de musique
+                    listView.setOnItemClickListener((parent, view, position, id) -> {
+                        Musique musiqueSelectionnee = musiqueList.get(position);
+                        Log.d("DEBUG_CLIC", "Musique cliquée : " + musiqueSelectionnee.getTitre()); // <-- ICI
+
+                        Intent intent = new Intent(ClickableActivity.this, MainActivity.class);
+                        intent.putExtra("musique_titre", musiqueSelectionnee.getTitre());
+                        startActivity(intent);
+                    });
                 });
             } else {
                 Log.e("DEBUG_CSV", "Fichier CSV non téléchargé");

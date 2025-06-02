@@ -20,6 +20,8 @@ public class ClickableActivity extends AppCompatActivity {
 
     private ListView listView;
     private List<Musique> musiqueList;
+    private List<Musique> musiquesFiltrees;
+    private MusiqueAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +38,9 @@ public class ClickableActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-
-
         findViewById(R.id.btn_other).setOnClickListener(v -> {
             // action future
         });
-
 
         listView = findViewById(R.id.lv_musiques);
 
@@ -50,12 +49,34 @@ public class ClickableActivity extends AppCompatActivity {
             if (fichier != null) {
                 musiqueList = CsvParser.parseAll(fichier);
                 runOnUiThread(() -> {
-                    MusiqueAdapter adapter = new MusiqueAdapter(this, musiqueList);
+                    musiquesFiltrees = new java.util.ArrayList<>(musiqueList);
+                    adapter = new MusiqueAdapter(this, musiquesFiltrees);
                     listView.setAdapter(adapter);
+
+                    // Barre de recherche
+                    android.widget.EditText searchBar = findViewById(R.id.search_bar);
+                    searchBar.addTextChangedListener(new android.text.TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            musiquesFiltrees.clear();
+                            for (Musique m : musiqueList) {
+                                if (m.getTitre().toLowerCase().contains(s.toString().toLowerCase())) {
+                                    musiquesFiltrees.add(m);
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void afterTextChanged(android.text.Editable s) {}
+                    });
 
                     // Clic sur une ligne de musique
                     listView.setOnItemClickListener((parent, view, position, id) -> {
-                        Musique musiqueSelectionnee = musiqueList.get(position);
+                        Musique musiqueSelectionnee = musiquesFiltrees.get(position);
                         Log.d("DEBUG_CLIC", "Musique cliquée : " + musiqueSelectionnee.getTitre()); // <-- ICI
 
                         Intent intent = new Intent(ClickableActivity.this, MainActivity.class);
@@ -68,5 +89,4 @@ public class ClickableActivity extends AppCompatActivity {
             }
         }).start();
     }
-
 }

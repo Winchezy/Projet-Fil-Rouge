@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:text="artiste"
         android:layout_marginLeft="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/img_musique"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toEndOf="@+id/img_musique"
         app:layout_constraintTop_toTopOf="@+id/img_musique" />
 
@@ -30,7 +30,7 @@
         android:id="@+id/tv_titre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:text="titre"
         app:layout_constraintStart_toStartOf="@+id/tv_artiste"
         app:layout_constraintTop_toBottomOf="@+id/tv_artiste"
@@ -44,12 +44,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:numStars="5"
-        android:scaleX="0.6"
-        android:scaleY="0.6"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        android:progressDrawable="@drawable/custom_ratingbar"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:progressTint="@android:color/holo_orange_light"
+        android:progressTint="@android:color/holo_purple"
         android:progressBackgroundTint="@android:color/darker_gray"
-        android:secondaryProgressTint="@android:color/holo_orange_light"/>
+        android:secondaryProgressTint="@android:color/holo_orange_light"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -59,7 +59,19 @@ public class MusiqueAdapter extends BaseAdapter {
         Glide.with(context).load(imageUrl).into(imgMusique);
 
         // On peut ignorer le rating pour l’instant ou le remplir par défaut
-        ratingBar.setRating(3);
+
+        // Charger la note sauvegardée
+        android.content.SharedPreferences prefs = context.getSharedPreferences("notations", Context.MODE_PRIVATE);
+        int note = prefs.getInt(musique.getTitre(), 3);
+        ratingBar.setRating(note);
+
+        // Sauvegarder la note quand l'utilisateur la modifie
+        ratingBar.setOnRatingBarChangeListener((bar, rating, fromUser) -> {
+            if (fromUser) {
+                prefs.edit().putInt(musique.getTitre(), (int) rating).apply();
+            }
+        });
+
 
         return view;
     }

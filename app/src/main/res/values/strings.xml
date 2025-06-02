@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Projet Fil Rouge</string>
-    <string name="autre">Autre</string>
+    <string name="likes">Likes</string>
     <string name="lecteur">Lecteur</string>
     <string name="accueil">Accueil</string>
     <string name="search">Rechercher une musique...</string>

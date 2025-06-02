@@ -36,8 +36,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:contentDescription="@string/autre"
-            android:src="@drawable/star"
+            android:contentDescription="@string/likes"
+            android:src="@drawable/thumb"
             />
     </LinearLayout>
 

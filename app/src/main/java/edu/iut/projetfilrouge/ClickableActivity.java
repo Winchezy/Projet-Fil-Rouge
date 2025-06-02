@@ -3,6 +3,7 @@ package edu.iut.projetfilrouge;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,12 @@ public class ClickableActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        );
 
         findViewById(R.id.btn_home).setOnClickListener(v -> {
             // déjà ici

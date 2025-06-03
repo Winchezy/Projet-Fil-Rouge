@@ -39,22 +39,36 @@ public class PlayerService extends Service {
                     @Override
                     public void onPlaybackStateChanged(int playbackState) {
                         if (playbackState == Player.STATE_ENDED) {
-                            if (mainActivityInstance != null) {
+                            if (replayEnabled) {
+                                player.seekTo(0);
+                                player.play();
+                            } else if (mainActivityInstance != null && !mainActivityInstance.isFinishing()) {
                                 mainActivityInstance.runOnUiThread(() -> {
-                                    if (replayEnabled) {
-                                        player.seekTo(0);
-                                        player.play();
-                                    } else if (randomEnabled) {
+                                    if (randomEnabled) {
                                         mainActivityInstance.playRandomMusic();
                                     } else {
                                         mainActivityInstance.playNextMusic();
                                     }
                                 });
-                            }
+                            } else {
+                                int nextIndex;
+                                if (randomEnabled) {
+                                    nextIndex = new java.util.Random().nextInt(player.getMediaItemCount());
+                                } else {
+                                    nextIndex = player.getCurrentMediaItemIndex() + 1;
+                                }
 
+                                if (nextIndex < player.getMediaItemCount()) {
+                                    player.seekTo(nextIndex, 0);
+                                    player.play();
+                                } else {
+                                    currentUrl = null;
+                                }
+                            }
                         }
                     }
                 });
+
                 listenerAjoute = true;
             }
 

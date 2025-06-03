@@ -324,14 +324,16 @@ public class MainActivity extends AppCompatActivity {
         startService(intent);
     }
 
-    public void playNextMusic() {
+    void playNextMusic() {
         if (currentIndex < musiqueList.size() - 1) {
             currentIndex++;
-            afficherMusique(musiqueList.get(currentIndex));
+            Musique musique = musiqueList.get(currentIndex);
+            afficherMusique(musique);
         }
     }
 
-    public void playRandomMusic() {
+
+    void playRandomMusic() {
         if (musiqueList.size() <= 1) return;
 
         int previousIndex = currentIndex;
@@ -343,6 +345,22 @@ public class MainActivity extends AppCompatActivity {
 
         historique.push(currentIndex);
         currentIndex = newIndex;
-        afficherMusique(musiqueList.get(currentIndex));
+        Musique musique = musiqueList.get(currentIndex);
+        afficherMusique(musique);
     }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        PlayerService.setMainActivityInstance(null); // 🔥 libère la référence
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PlayerService.setMainActivityInstance(this); // 🔁 reconnecte proprement
+    }
+
+
 }

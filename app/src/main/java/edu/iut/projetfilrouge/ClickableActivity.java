@@ -81,9 +81,6 @@ public class ClickableActivity extends AppCompatActivity {
             popupMenu.show();
         });
 
-
-
-
         listView = findViewById(R.id.lv_musiques);
 
         new Thread(() -> {

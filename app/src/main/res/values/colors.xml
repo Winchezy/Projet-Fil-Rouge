@@ -4,6 +4,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="grey_alpha">#66949494</color>
     <color name="purple_alpha">#B2978ECA</color>
-    <color name="purple_dark">#B25F4492</color>
+    <color name="purple_dark">#E45B369E</color>
     <color name="purple">#B24A0094</color>
+    <color name="degrade_bleu">#4980f6</color>
+    <color name="degrade_violet">#b23ef2</color>
 </resources>

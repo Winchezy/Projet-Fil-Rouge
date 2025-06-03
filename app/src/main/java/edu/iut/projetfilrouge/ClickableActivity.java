@@ -1,7 +1,11 @@
 package edu.iut.projetfilrouge;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
 import android.os.Bundle;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -15,12 +19,14 @@ import java.io.File;
 import java.util.List;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class ClickableActivity extends AppCompatActivity {
 
@@ -39,6 +45,24 @@ public class ClickableActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
         );
+
+        TextView textView = findViewById(R.id.app_title);
+
+        TextPaint paint = textView.getPaint();
+        float width = paint.measureText(textView.getText().toString());
+
+        Shader shader = new LinearGradient(
+                0, 0, width, 0, // gauche → droite
+                new int[]{
+                        ContextCompat.getColor(this, R.color.degrade_bleu),
+                        ContextCompat.getColor(this, R.color.degrade_violet)
+                }, // dégradé rouge vers jaune
+                null,
+                Shader.TileMode.CLAMP);
+
+        paint.setShader(shader);
+        textView.invalidate();
+
 
         findViewById(R.id.btn_home).setOnClickListener(v -> {
             // déjà ici

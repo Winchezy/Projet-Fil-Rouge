@@ -353,13 +353,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        PlayerService.setMainActivityInstance(null); // 🔥 libère la référence
+        PlayerService.setMainActivityInstance(null); // libère la référence
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        PlayerService.setMainActivityInstance(this); // 🔁 reconnecte proprement
+        PlayerService.setMainActivityInstance(this); // reconnecte proprement
     }
 
 

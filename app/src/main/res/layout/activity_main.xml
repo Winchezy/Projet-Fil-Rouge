@@ -70,6 +70,7 @@
         android:hint="@string/search"
         android:textColorHint="@color/white"
         android:inputType="text"
+        android:textColor="@color/white"
         android:drawableStart="@android:drawable/ic_menu_search"
         android:layout_margin="8dp" />
 

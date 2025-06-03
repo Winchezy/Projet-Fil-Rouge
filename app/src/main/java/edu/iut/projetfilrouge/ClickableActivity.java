@@ -140,13 +140,22 @@ public class ClickableActivity extends AppCompatActivity {
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
                             musiquesFiltrees.clear();
+                            String query = s.toString().toLowerCase();
+
                             for (Musique m : musiqueList) {
-                                if (m.getTitre().toLowerCase().contains(s.toString().toLowerCase())) {
+                                if (
+                                        m.getTitre().toLowerCase().contains(query) ||
+                                                m.getArtist().toLowerCase().contains(query) ||
+                                                m.getAlbum().toLowerCase().contains(query) ||
+                                                String.valueOf(m.getDate()).contains(query) ||
+                                                m.getLyrics().toLowerCase().contains(query)
+                                ) {
                                     musiquesFiltrees.add(m);
                                 }
                             }
                             adapter.notifyDataSetChanged();
                         }
+
 
                         @Override
                         public void afterTextChanged(android.text.Editable s) {}

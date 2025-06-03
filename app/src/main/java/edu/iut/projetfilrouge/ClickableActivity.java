@@ -1,9 +1,12 @@
 package edu.iut.projetfilrouge;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +19,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
+import android.widget.PopupMenu;
+import android.widget.Spinner;
 
 public class ClickableActivity extends AppCompatActivity {
 
@@ -45,9 +50,39 @@ public class ClickableActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        findViewById(R.id.btn_other).setOnClickListener(v -> {
-            // action future
+        ImageView imgView = findViewById(R.id.btn_other); // ou ton image
+
+        imgView.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(this, v);
+            popupMenu.getMenu().add("1");
+            popupMenu.getMenu().add("2");
+            popupMenu.getMenu().add("3");
+            popupMenu.getMenu().add("4");
+            popupMenu.getMenu().add("5");
+
+            popupMenu.setOnMenuItemClickListener(item -> {
+                String selectedNote = item.getTitle().toString();
+                int seuil = Integer.parseInt(selectedNote);
+
+                musiquesFiltrees.clear();
+                SharedPreferences prefs = getSharedPreferences("notations", MODE_PRIVATE);
+
+                for (Musique m : musiqueList) {
+                    int note = prefs.getInt(m.getTitre(), 3);
+                    if (note >= seuil) {
+                        musiquesFiltrees.add(m);
+                    }
+                }
+
+                adapter.notifyDataSetChanged();
+                return true;
+            });
+
+            popupMenu.show();
         });
+
+
+
 
         listView = findViewById(R.id.lv_musiques);
 

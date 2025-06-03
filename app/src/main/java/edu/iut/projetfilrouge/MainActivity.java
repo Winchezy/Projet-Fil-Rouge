@@ -1,5 +1,7 @@
 package edu.iut.projetfilrouge;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -9,6 +11,8 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
@@ -170,14 +174,23 @@ public class MainActivity extends AppCompatActivity {
                 .into(new com.bumptech.glide.request.target.CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, com.bumptech.glide.request.transition.Transition<? super Bitmap> transition) {
-                        ((ImageView) findViewById(R.id.music_image)).setImageBitmap(resource);
+                        ImageView imageView = findViewById(R.id.music_image);
+                        imageView.setImageBitmap(resource);
+
+                        // Appliquer uniquement le fondu à l'image principale
+                        Animation fadeInImage = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fondu);
+                        imageView.startAnimation(fadeInImage);
+
+                        // Appliquer le flou sans animation au fond
                         Bitmap flou = blurBitmap(resource, 20f);
-                        ((ImageView) findViewById(R.id.backgroundImage)).setImageBitmap(flou);
+                        ImageView backgroundImage = findViewById(R.id.backgroundImage);
+                        backgroundImage.setImageBitmap(flou);
                     }
 
                     @Override
                     public void onLoadCleared(android.graphics.drawable.Drawable placeholder) {}
                 });
+
 
         // Forcer retour à l’image si on était sur les lyrics
         if (showingLyrics) {
@@ -253,6 +266,10 @@ public class MainActivity extends AppCompatActivity {
     public void changerCouleurBoutonReplay() {
         ImageView replayButton = findViewById(R.id.replay_logo);
 
+        Animator animator = AnimatorInflater.loadAnimator(this, R.animator.animation);
+        animator.setTarget(replayButton);
+        animator.start();
+
         if (etatLogoReplay) {
             replayButton.setImageResource(R.drawable.replay);
             boucleActivee = false;
@@ -268,6 +285,7 @@ public class MainActivity extends AppCompatActivity {
             player.setRepeatMode(boucleActivee ? Player.REPEAT_MODE_ONE : Player.REPEAT_MODE_OFF);
         }
     }
+
 
     private void toggleLyrics() {
         ImageView musicImage = findViewById(R.id.music_image);

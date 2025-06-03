@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grey_alpha">#66949494</color>
-    <color name="white_alpha">#B2978ECA</color>
+    <color name="purple_alpha">#B2978ECA</color>
+    <color name="purple_dark">#B25F4492</color>
     <color name="purple">#B24A0094</color>
 </resources>

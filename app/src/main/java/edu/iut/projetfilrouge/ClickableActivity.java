@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextPaint;
 import android.util.Log;
 import android.view.Menu;
@@ -42,8 +43,10 @@ public class ClickableActivity extends AppCompatActivity {
 
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         );
 
         TextView textView = findViewById(R.id.app_title);
@@ -74,7 +77,7 @@ public class ClickableActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        ImageView imgView = findViewById(R.id.btn_other); // ou ton image
+        ImageView imgView = findViewById(R.id.btn_other);
 
         imgView.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(this, v);
@@ -103,7 +106,19 @@ public class ClickableActivity extends AppCompatActivity {
             });
 
             popupMenu.show();
+
+            // Réactiver le mode plein écran après une courte pause
+            new Handler().postDelayed(() -> {
+                View decorView = getWindow().getDecorView();
+                decorView.setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            }, 100); // 100 ms pour laisser le menu apparaître
         });
+
 
         listView = findViewById(R.id.lv_musiques);
 

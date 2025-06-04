@@ -59,7 +59,7 @@ public class ClickableActivity extends AppCompatActivity {
                 new int[]{
                         ContextCompat.getColor(this, R.color.degrade_bleu),
                         ContextCompat.getColor(this, R.color.degrade_violet)
-                }, // dégradé rouge vers jaune
+                },
                 null,
                 Shader.TileMode.CLAMP);
 
